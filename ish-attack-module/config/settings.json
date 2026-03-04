@@ -1,0 +1,17 @@
+{
+  "_disclaimer": "EDUCATIONAL USE ONLY. Do not use against systems you do not own or have explicit permission to test.",
+  "allowed_targets": ["127.0.0.1", "localhost"],
+  "port_scan": {
+    "timeout_seconds": 1.0,
+    "max_ports": 1024
+  },
+  "brute_force": {
+    "max_attempts": 100,
+    "delay_between_attempts_seconds": 0.1
+  },
+  "ddos_simulation": {
+    "max_requests_per_second": 10,
+    "duration_seconds_max": 5,
+    "target_port": 80
+  }
+}
