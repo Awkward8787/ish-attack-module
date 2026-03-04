@@ -1,5 +1,7 @@
 # ish-attack-module
 
+**Author:** [Awkward8787](https://github.com/Awkward8787) · **Repository:** [ish-attack-module](https://github.com/Awkward8787/ish-attack-module)
+
 **EDUCATIONAL USE ONLY.** This module demonstrates basic concepts of port scanning, brute-force attempts, and DoS simulation for learning purposes only. Do **not** use against any system you do not own or have explicit written permission to test. Unauthorized access to computer systems is illegal.
 
 Designed for use in a **terminal environment**, especially **Alpine iSH** on iOS: all features work from the command line and via Python imports.
