@@ -2,13 +2,26 @@
 """
 EDUCATIONAL USE ONLY.
 CLI for ish-attack-module. Use in Alpine iSH terminal: python main.py [command] [options].
-All operations restricted to localhost/allowed_targets.
+Run with no args for interactive menu. All operations restricted to localhost/allowed_targets.
 """
 from __future__ import print_function
 
 import argparse
 import sys
 import os
+
+# ANSI codes for hacker-style terminal (skip if not a TTY for pipes)
+def _ansi(code):
+    if hasattr(sys.stdout, "isatty") and sys.stdout.isatty():
+        return "\033[{}m".format(code)
+    return ""
+
+R = _ansi("0")       # reset
+G = _ansi("32")      # green
+C = _ansi("36")      # cyan
+Y = _ansi("33")      # yellow
+D = _ansi("2;90")    # dim gray
+B = _ansi("1")       # bold
 
 # Ensure package root is on path when run as script from any cwd
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -68,6 +81,60 @@ def cmd_ddos(host: str, port: int, duration: float, rps: float) -> int:
     return 0
 
 
+def _banner():
+    """Print hacker-style banner and credit."""
+    print()
+    print(D + "  ╔═══════════════════════════════════════════════════════════╗" + R)
+    print(D + "  ║" + R + C + "   ██╗███████╗██╗  ██╗     █████╗ ████████╗████████╗ ██████╗ ██╗  ██╗   " + D + "║" + R)
+    print(D + "  ║" + R + C + "   ██║██╔════╝██║  ██║    ██╔══██╗╚══██╔══╝╚══██╔══╝██╔═══██╗██║ ██╔╝   " + D + "║" + R)
+    print(D + "  ║" + R + C + "   ██║███████╗███████║    ███████║   ██║      ██║   ██║   ██║█████╔╝    " + D + "║" + R)
+    print(D + "  ║" + R + C + "   ██║╚════██║██╔══██║    ██╔══██║   ██║      ██║   ██║   ██║██╔═██╗    " + D + "║" + R)
+    print(D + "  ║" + R + C + "   ██║███████║██║  ██║    ██║  ██║   ██║      ██║   ╚██████╔╝██║  ██╗   " + D + "║" + R)
+    print(D + "  ║" + R + C + "   ╚═╝╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝   ╚═╝      ╚═╝    ╚═════╝ ╚═╝  ╚═╝   " + D + "║" + R)
+    print(D + "  ║" + R + "                                                           " + D + "║" + R)
+    print(D + "  ║" + R + G + "        [ EDUCATIONAL USE ONLY - LOCALHOST ONLY ]" + D + "              ║" + R)
+    print(D + "  ╚═══════════════════════════════════════════════════════════╝" + R)
+    print(Y + "                        created by " + B + "Dark Juan" + R)
+    print()
+
+
+def run_interactive_menu(cfg) -> int:
+    """Show interactive menu and run selected tool."""
+    ps = cfg.get("port_scan", {})
+    bf = cfg.get("brute_force", {})
+    ddos = cfg.get("ddos_simulation", {})
+    host = "127.0.0.1"
+
+    while True:
+        _banner()
+        print(G + "  [1]" + R + " Port Scan     " + D + "... scan open ports on target" + R)
+        print(G + "  [2]" + R + " Brute Force   " + D + "... credential attempt simulation (demo)" + R)
+        print(G + "  [3]" + R + " DDoS Sim      " + D + "... rate-limited request simulation" + R)
+        print(C + "  [0]" + R + " Exit")
+        print()
+        try:
+            choice = input(Y + "  Select option [0-3]: " + R).strip() or "0"
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return 0
+        if choice == "0":
+            print(G + "  Exiting." + R)
+            return 0
+        if choice == "1":
+            max_ports = ps.get("max_ports", 1024)
+            timeout = ps.get("timeout_seconds", 1.0)
+            return cmd_port_scan(host, min(max_ports, 50), timeout)
+        if choice == "2":
+            return cmd_brute_force(host, None, bf.get("max_attempts", 100), bf.get("delay_between_attempts_seconds", 0.1))
+        if choice == "3":
+            port = ddos.get("target_port", 80)
+            duration = min(float(ddos.get("duration_seconds_max", 5)), 5.0)
+            rps = min(float(ddos.get("max_requests_per_second", 10)), 20.0)
+            return cmd_ddos(host, port, duration, rps)
+        print(D + "  Invalid option." + R)
+        print()
+
+
 def main() -> int:
     cfg = load_config()
     ps = cfg.get("port_scan", {})
@@ -109,8 +176,7 @@ def main() -> int:
     if args.command == "ddos":
         return cmd_ddos(args.host, args.port, args.duration, args.rps)
 
-    parser.print_help()
-    return 0
+    return run_interactive_menu(cfg)
 
 
 if __name__ == "__main__":
