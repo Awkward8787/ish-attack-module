@@ -9,12 +9,16 @@ __pycache__/
 venv/
 env/
 
-# IDE
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# IDE / OS
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# OS
 .DS_Store
 Thumbs.db

@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="docs/banner.png" alt="ish-attack-module" width="100%">
+  <img src="assets/banner.png" alt="ish-attack-module" width="100%">
 </p>
 
 # ish-attack-module
 
-**Educational CLI module for localhost-only demos of port scan, brute-force attempts, and DoS simulation (Alpine iSH friendly).**
+**Educational CLI module for localhost-only demos of common network concepts (Alpine iSH friendly).**
 
 [![License: All Rights Reserved](https://img.shields.io/badge/license-all%20rights%20reserved-lightgrey)](#license)
 ![Python](https://img.shields.io/badge/Python-3776AB&logo=python&logoColor=white)
@@ -14,8 +14,9 @@
 
 ## Features
 
-- CLI: `port-scan`, `brute-force`, `ddos` with capped rates/ports/durations
-- Interactive menu when run with no args
+- Interactive menu and subcommands for localhost-only demos
+- Hard target allowlist (`127.0.0.1` / `localhost` + config)
+- Caps on rates, ports, and durations
 - pytest suite under `ish-attack-module/tests/`
 - Designed to run in Alpine iSH on iOS without pip install
 
@@ -24,15 +25,27 @@
 - Python 3 (stdlib)
 - Optional pytest
 
+## How it works
+
+```mermaid
+flowchart LR
+  student[Student on iSH / local Python] --> cli[CLI menu]
+  cli --> guard[Target allowlist check]
+  guard -->|localhost only| demo[Capped educational demo]
+  guard -->|other host| refuse[Refuse]
+  demo --> report[Local console report]
+```
+
+Every run checks the target against the allowlist before any demo starts. Non-localhost hosts are refused. Caps keep demos short and local.
+
 ## How to run
 
 ```bash
 cd ish-attack-module
 python3 main.py --help
-python3 main.py port-scan --max-ports 10
-python3 main.py brute-force --max-attempts 5
-python3 main.py ddos --duration 2 --rps 5
 ```
+
+See `python3 main.py --help` and `config/settings.json` for available educational demos and allowlisted targets. Use only on localhost.
 
 ## Status
 
