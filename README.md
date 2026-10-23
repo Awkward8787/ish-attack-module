@@ -41,3 +41,20 @@ Public. Educational / localhost-only. Not a general attack tool.
 ## License
 
 All rights reserved. Educational use only.
+
+## Download
+
+Archives are published on the [Releases page](https://github.com/Awkward8787/ish-attack-module/releases); the latest release carries `ish-attack-module-v0.1.0.zip`.
+
+**EDUCATIONAL USE ONLY** — all activity is restricted to localhost or the configured `allowed_targets`.
+
+### Install & run
+```bash
+unzip ish-attack-module-v0.1.0.zip
+cd ish-attack-module
+python3 main.py --help
+python3 main.py port-scan --host 127.0.0.1 --max-ports 20
+python3 main.py brute-force --host 127.0.0.1 --max-attempts 5
+python3 main.py ddos --host 127.0.0.1 --duration 2 --rps 5
+```
+No pip install required; the module runs from the directory.
